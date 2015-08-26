@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+	<!-- This will automatically locate any and all property files you have 
+		within your classpath, provided they fall under the META-INF/spring directory. 
+		The located property files are parsed and their values can then be used within 
+		application context files in the form of ${propertyKey}. -->
+		<!-- 
+	<context:property-placeholder location="file:///${user.dir}/ResourcePPFF/config/configuration_jms.properties" order="2" ignore-unresolvable="true" />
+	 -->
+	<!-- Turn on AspectJ @Configurable support. As a result, any time you instantiate 
+		an object, Spring will attempt to perform dependency injection on that object. 
+		This occurs for instantiation via the "new" keyword, as well as via reflection. 
+		This is possible because AspectJ is used to "weave" Roo-based applications 
+		at compile time. In effect this feature allows dependency injection of any 
+		object at all in your system, which is a very useful feature (without @Configurable 
+		you'd only be able to dependency inject objects acquired from Spring or subsequently 
+		presented to a specific Spring dependency injection method). Roo applications 
+		use this useful feature in a number of areas, such as @PersistenceContext 
+		injection into entities. -->
+	<context:spring-configured />
+
+	<!--  INIT: CONFIGURACION CONNECTION FACTORY Y JNDI TEMPLATE, ESTO ES GENERAL -->
+	<!-- 
+	<bean id="connectionFactory" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiTemplate" ref="jndiTemplate" />
+		<property name="jndiName" value="${connectionFactory}" />
+	</bean>
+
+	<bean id="connectionFactoryNonXA" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiTemplate" ref="jndiTemplate" />
+		<property name="jndiName" value="${connectionFactory.nonxa}" />
+	</bean>
+	
+	<bean id="jndiTemplate" class="org.springframework.jndi.JndiTemplate">
+		<property name="environment">
+			<props>
+				<prop key="java.naming.factory.initial">${jms.initialContextFactoryName}</prop>
+				<prop key="java.naming.provider.url">${jms.providerURL}</prop>
+			</props>
+		</property>
+	</bean>
+	 -->
+	<!--  END: CONFIGURACION CONNECTION FACTORY Y JNDI TEMPLATE, ESTO ES GENERAL -->
+
+	<!--  INIT: CONFIGURACION DE LOS MDB -->
+	<!--
+	<bean id="listenerAuditoria" class="com.cla.ppff.logic.mdb.AuditoriaMDB" />
+	
+	<bean id="listenerException" class="com.cla.ppff.logic.mdb.ExceptionMDB" />
+	
+	<bean id="listenerTraspaso"  class="com.cla.ppff.logic.mdb.TraspasoMDB" />
+
+	<bean id="listenerDeclaracion"  class="com.cla.ppff.logic.mdb.DeclaracionMDB" />
+
+	<bean id="listenerRespuestaSiagf" class="com.cla.ppff.logic.mdb.RespuestaSiagfMDB" />
+	-->
+	<!--  END: CONFIGURACION DE LOS MDB -->
+
+
+	<!--  INIT: CONFIGURACION DE LOS DISTINTOS CONTAINER JMS  -->	
+	<!--
+	<bean id="jmsContainerAuditoria" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	    <property name="connectionFactory" ref="connectionFactory"/>
+	    <property name="destination" ref="destinationAuditoria"/>
+	    <property name="messageListener" ref="listenerAuditoria" />
+	</bean>
+
+	<bean id="jmsContainerException" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	    <property name="connectionFactory" ref="connectionFactoryNonXA"/>
+	    <property name="destination" ref="destinationException"/>
+	    <property name="messageListener" ref="listenerException" />
+	</bean>
+
+	<bean id="jmsContainerTraspaso" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	    <property name="connectionFactory" ref="connectionFactory"/>
+	    <property name="destination" ref="destinationTraspaso"/>
+	    <property name="messageListener" ref="listenerTraspaso" />
+	</bean>
+
+	<bean id="jmsContainerDeclaracion" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	    <property name="connectionFactory" ref="connectionFactory"/>
+	    <property name="destination" ref="destinationDeclaracion"/>
+	    <property name="messageListener" ref="listenerDeclaracion" />
+	</bean>
+
+	<bean id="jmsContainerRespuestaSiagf" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	    <property name="connectionFactory" ref="connectionFactoryNonXA"/>
+	    <property name="destination" ref="destinationRespuestaSiagf"/>
+	    <property name="messageListener" ref="listenerRespuestaSiagf" />
+	</bean>
+	-->
+	<!--  END: CONFIGURACION CONTAINER JMS  -->	
+
+
+	<!--   INIT : CONFIGURACION DE LOS DISTINTOS DESTINOS -->
+	<!--
+	<bean id="destinationAuditoria" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiTemplate" ref="jndiTemplate" />
+		<property name="jndiName" value="${jms.queue.auditoria}" />
+	</bean>
+	
+	<bean id="destinationException" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiTemplate" ref="jndiTemplate" />
+		<property name="jndiName" value="${jms.queue.exception}" />
+	</bean>
+	
+	<bean id="destinationTraspaso" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiTemplate" ref="jndiTemplate" />
+		<property name="jndiName" value="${jms.queue.traspaso}" />
+	</bean>
+
+	<bean id="destinationDeclaracion" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiTemplate" ref="jndiTemplate" />
+		<property name="jndiName" value="${jms.queue.declaracion}" />
+	</bean>
+
+	<bean id="destinationRespuestaSiagf" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiTemplate" ref="jndiTemplate" />
+		<property name="jndiName" value="${jms.queue.respuesta.siagf}" />
+	</bean>
+	-->
+	<!--   END : CONFIGURACION DE LOS DISTINTOS DESTINOS -->
+	
+	
+	<!-- INIT: CONFIGURACION DE LOS DISTINTOS JSMTEMPLATE PARA ENVIAR MENSAJES A LA COLA -->
+	<!--
+	<bean id="jmsTemplateTraspaso" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultDestination" ref="destinationTraspaso" />
+	</bean>
+
+	<bean id="jmsTemplateException" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactoryNonXA" />
+		<property name="defaultDestination" ref="destinationException" />
+	</bean>
+
+	<bean id="jmsTemplateDeclaracion" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultDestination" ref="destinationDeclaracion" />
+	</bean>
+
+	<bean id="jmsTemplateRespuestaSiagf" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactoryNonXA" />
+		<property name="defaultDestination" ref="destinationRespuestaSiagf" />
+	</bean>
+	-->
+	<!-- END: CONFIGURACION DE LOS DISTINTOS JSMTEMPLATE PARA ENVIAR MENSAJES A LA COLA -->
+	
+</beans>

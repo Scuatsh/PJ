@@ -1,0 +1,266 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition>
+<p:growl id="growl" showDetail="true" sticky="true" />
+	<fieldset class="scheduler-border">
+		<legend class="scheduler-border">Carga de Documentos</legend>
+		<table id="tblCarga">
+
+			<tr>
+				
+				<td><p:outputLabel for="year" value="Año:" /></td>
+				<td><rich:select id="year" enableManualInput="true"
+						defaultLabel="Seleccione..." style="  font-size: 22px;"
+						value="#{cargaBean.objDocumento.doc_ano}" required="true">
+						<f:selectItems value="#{cargaBean.listYears}" var="y"
+							itemValue="#{y}" itemLabel="#{y}" />
+
+					</rich:select> </td>
+
+				<td><p:outputLabel for="destinatario" value="Destinatario:" /></td>
+				<td><rich:select id="destinatario" enableManualInput="true"
+						defaultLabel="Seleccione..." style="  font-size: 22px;"
+						value="#{cargaBean.objDocumento.des_id}" required="true">
+						<f:selectItems value="#{cargaBean.listDestinatario}" var="des"
+							itemValue="#{des.des_id}" itemLabel="#{des.des_nombre_large}" />
+					</rich:select></td>
+			</tr>
+
+
+			<tr>
+
+				<td><p:outputLabel for="descriptor" value="Descriptor:" /></td>
+				<td><rich:select id="descriptor" enableManualInput="true"
+						defaultLabel="Seleccione..." style="  font-size: 22px;"
+						value="#{cargaBean.objDocumento.desc_id}" required="true">
+						<f:selectItems value="#{cargaBean.listDescriptor}" var="desc"
+							itemValue="#{desc.desc_id}" itemLabel="#{desc.desc_nombre_large}" />
+					</rich:select></td>
+
+				<td><p:outputLabel value="Materia:" for="materia" /></td>
+				<td><p:inputText id="materia"
+						value="#{cargaBean.objDocumento.doc_materia}" required="true"
+						style="height: 25px;"  /></td>
+
+			</tr>
+
+
+			<tr>
+
+				<td><p:outputLabel value="N° Documento:" for="numero" /></td>
+				<td><p:inputText id="numero"
+						value="#{cargaBean.objDocumento.doc_numero}" required="true"
+						 style="height: 25px;" /></td>
+
+				<td><p:outputLabel for="tpoDocumento" value="Tipo Documento:" /></td>
+				<td><rich:select id="tpoDocumento" enableManualInput="true"
+						defaultLabel="Seleccione..." style="  font-size: 22px;" required="true"
+						value="#{cargaBean.objDocumento.tpo_id}">
+						<f:selectItems value="#{cargaBean.listTipoDocumento}" var="tpo"
+							itemValue="#{tpo.tpo_id}" itemLabel="#{tpo.tpo_nombre_large}" />
+					</rich:select></td>
+
+			</tr>
+
+			<tr>
+
+				<td><p:outputLabel value="Abogado:" for="abogado" /></td>
+				<td><p:inputText id="abogado"
+						value="#{cargaBean.objDocumento.doc_abogado}" required="true"
+						 style="height: 25px;" /></td>
+
+				<td><p:outputLabel value="Resumen:" for="resumen" /></td>
+				<td><p:inputTextarea rows="6" cols="33" id="resumen"
+						
+						value="#{cargaBean.objDocumento.doc_resumen}" required="true" /></td>
+
+			</tr>
+
+
+		</table>
+
+		<p:fileUpload fileUploadListener="#{cargaBean.upload}"
+			label="Examinar" uploadLabel="Subir Documento" cancelLabel="Cancelar"
+			allowTypes="/(\.|\/)(pdf)$/" sizeLimit="10000000000"
+			description="Examinar" mode="advanced" multiple="true"
+			dragDropSupport="true" fileLimit="1" update="tblResultUpload" />
+
+		<p:dataTable var="file" value="#{cargaBean.lstFileUpload}"
+			id="tblResultUpload">
+
+			<p:column headerText="Nombre">
+				<h:outputText value="#{file.fileName}" />
+			</p:column>
+
+			<p:column headerText="Eliminar">
+				<a4j:commandLink styleClass="no-decor centerLink" execute="@this"
+					render="@none" oncomplete="#{rich:component('confirmPane')}.show()">
+					<h:graphicImage value="resources/image/delete-black.png"
+						alt="delete" />
+				</a4j:commandLink>
+			</p:column>
+
+<!-- 			<p:column headerText="Visualizar" rendered="#{cargaBean.colum}"> -->
+
+<!-- 				<a4j:commandLink value="Visualizar" -->
+<!-- 					execute="tblCarga year destinatario descriptor materia  numero  resumen abogado tpoDocumento" -->
+<!-- 					oncomplete="#{rich:component('previewPane')}.show()" -->
+<!-- 					action="#{cargaBean.onPreRender}" render="@none" id="btnVisualizar" -->
+<!-- 					style="margin-left: 174px; width: 50%;" /> -->
+<!-- 			</p:column> -->
+
+		</p:dataTable>
+		<a4j:commandButton value="Guardar"
+			actionListener="#{cargaBean.submitForm}"
+			styleClass="button"
+			execute="tblCarga year destinatario descriptor materia  numero  resumen abogado tpoDocumento"
+			render="@form" style="margin-left: 5px;"
+			oncomplete="if(#{cargaBean.showpopup}) #{rich:component('previewPane')}.show()" id="btnSubmit" 
+			onerror="#{rich:component('previewPane')}.hide()"/>
+		<a id="jqueySub" style="display: none"><label>Guardar</label></a>
+		
+		<h:commandButton type="reset" style="margin-left: 5px;" value="Limpiar"/>
+
+		<rich:popupPanel id="confirmPane" autosized="true"
+			domElementAttachment="parent" header="Eliminar Documento">
+            Estás seguro de querer eliminar el documento?
+            <a4j:commandButton value="Cancelar"
+				onclick="#{rich:component('confirmPane')}.hide(); return false;" />
+
+			<a4j:commandButton value="Eliminar"
+				action="#{cargaBean.removeDocumento}" render="tblResultUpload"
+				execute="confirmPane"
+				oncomplete="if (#{facesContext.maximumSeverity==null}) {#{rich:component('confirmPane')}.hide();}" />
+		</rich:popupPanel>
+
+		<rich:popupPanel id="previewPane" autosized="true"
+			domElementAttachment="form" header="Publicar Documento">
+			<f:event listener="#{cargaBean.onPreRender}" type="preRenderView" />
+
+			<table>
+
+				<tr>
+
+					<td><pe:documentViewer height="500"
+							value="#{cargaBean.content}" /></td>
+					<td>
+
+						<table id="tblMetadata">
+
+							<tr>
+
+								<td><p:outputLabel for="yearM" value="Año:" /></td>
+								<td><p:outputLabel id="yearM"
+										value="#{cargaBean.objDocumento.doc_ano}"></p:outputLabel></td>
+
+
+							</tr>
+							<tr>
+
+								<td><p:outputLabel for="destinatarioM"
+										value="Destinatario:" /></td>
+								<td><p:outputLabel id="destinatarioM"
+										value="#{cargaBean.nombreDestinatario}"></p:outputLabel></td>
+							</tr>
+
+							<tr>
+
+								<td><p:outputLabel for="descriptorM" value="Descriptor:" /></td>
+								<td><p:outputLabel id="descriptorM"
+										value="#{cargaBean.nombreDescriptor}"></p:outputLabel></td>
+
+
+
+							</tr>
+
+
+							<tr>
+
+								<td><p:outputLabel value="Materia:" for="materiaM" /></td>
+								<td><p:outputLabel id="materiaM"
+										value="#{cargaBean.objDocumento.doc_materia}" /></td>
+							</tr>
+
+							<tr>
+
+								<td><p:outputLabel value="N° Documento:" for="numeroM" /></td>
+								<td><p:outputLabel id="numeroM"
+										value="#{cargaBean.objDocumento.doc_numero}" /></td>
+
+
+
+							</tr>
+
+
+							<tr>
+
+								<td><p:outputLabel for="tpoDocumentoM"
+										value="Tipo Documento:" /></td>
+								<td><p:outputLabel id="tpoDocumentoM"
+										value="#{cargaBean.nombreTpoDocumento}" /></td>
+
+							</tr>
+
+							<tr>
+
+								<td><p:outputLabel value="Abogado:" for="abogado" /></td>
+								<td><p:outputLabel id="abogadoM"
+										value="#{cargaBean.objDocumento.doc_abogado}" /></td>
+
+
+
+							</tr>
+
+							<tr>
+
+								<td><p:outputLabel value="Resumen:" for="resumenM" /></td>
+								<td><p:inputTextarea rows="6" cols="33" id="resumenM"
+										value="#{cargaBean.objDocumento.doc_resumen}" required="true"
+										disabled="true" /></td>
+							</tr>
+						</table>
+
+					</td>
+
+				</tr>
+
+			</table>
+
+			<a4j:commandLink value="Cerrar"
+			actionListener="#{cargaBean.cerrar()}"
+			execute="tblCarga year destinatario descriptor materia  numero  resumen abogado tpoDocumento"
+			render="@form" style="margin-left: 5px; width: 50%  ; "
+			oncomplete="#{rich:component('previewPane')}.hide()" id="btnCerrar" />
+
+			<a4j:commandLink value="Publicar"
+			actionListener="#{cargaBean.publicar()}"
+			execute="tblCarga year destinatario descriptor materia  numero  resumen abogado tpoDocumento"
+			render="@form" style="margin-left: 5px; width: 50%  ; "
+			oncomplete="#{rich:component('previewPane')}.hide()" id="btnPublicar" />
+
+		</rich:popupPanel>
+
+	</fieldset>
+
+	<script>
+	$(function() {
+  	  
+  	     $("#dataForm").validationEngine('attach');
+  	     $(document).on("click", "#jqueySub", function() {
+				$('#dataForm').submit();
+		});
+		
+});
+</script>
+
+<script> function doNothing(){} </script>
+</ui:composition>
+</html>

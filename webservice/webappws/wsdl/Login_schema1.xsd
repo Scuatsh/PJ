@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:tns="http://server.webservices.dgac.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://server.webservices.dgac.org/" version="1.0">
+<xs:element name="login" type="tns:login"/>
+<xs:element name="loginResponse" type="tns:loginResponse"/>
+<xs:complexType name="login">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="usrname" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="loginResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:resultDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="resultDTO">
+    <xs:sequence>
+      <xs:element name="codigo" type="xs:int"/>
+      <xs:element minOccurs="0" name="funcionario" type="tns:funcionarioDTO"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="grupos" nillable="true" type="tns:grupo"/>
+      <xs:element minOccurs="0" name="mensaje" type="xs:string"/>
+      <xs:element name="status" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="funcionarioDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="apellido_materno" type="xs:string"/>
+      <xs:element minOccurs="0" name="apellido_paterno" type="xs:string"/>
+      <xs:element minOccurs="0" name="digito_verificador" type="xs:string"/>
+      <xs:element minOccurs="0" name="mail" type="xs:string"/>
+      <xs:element minOccurs="0" name="nombres" type="xs:string"/>
+      <xs:element name="rut" type="xs:int"/>
+      <xs:element minOccurs="0" name="unidad" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="unidadAdicionalList" nillable="true" type="tns:unidadAdicionalDTO"/>
+      <xs:element name="unidadId" type="xs:int"/>
+      <xs:element minOccurs="0" name="unidadNemo" type="xs:string"/>
+      <xs:element name="unidadNemoId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="unidadAdicionalDTO">
+    <xs:sequence>
+      <xs:element name="rut_funcionario" type="xs:int"/>
+      <xs:element name="tabla_id" type="xs:int"/>
+      <xs:element name="unidad_nemo" type="xs:int"/>
+      <xs:element minOccurs="0" name="unidad_nemo_gl" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="grupo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nombre" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

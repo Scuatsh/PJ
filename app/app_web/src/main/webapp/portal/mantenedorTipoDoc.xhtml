@@ -1,0 +1,123 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition>
+<fieldset class="scheduler-border">
+		<legend class="scheduler-border">Mantenedor Tipo Documento</legend>
+		
+			<p:dataTable id="tableMantenedor"
+				value="#{mantenedorBean.tipoDocumentoList}" var="d"
+				rowKey="#{d.desc_id}">
+				<p:column headerText="ID">
+					<h:outputText value="#{d.tpo_id}"></h:outputText>
+				</p:column>
+				<p:column headerText="Nombre Corto">
+					<h:outputText value="#{d.tpo_nombre_small}" />
+				</p:column>
+				<p:column headerText="Nombre Largo">
+					<h:outputText value="#{d.tpo_nombre_large}"></h:outputText>
+				</p:column>
+				<p:column headerText="Estado">
+					<h:outputText value="#{d.tpo_estado == 1? 'Activo':'Inactivo'}" />
+				</p:column>
+				<p:column headerText="Funciones">
+					<a4j:commandLink  styleClass="no-decor"  execute="@this" actionListener="#{mantenedorBean.eliminarTipoDoc(d.tpo_id)}">
+						<h:graphicImage
+							value="resources/css/images/icons-png/delete-black.png"
+							style="padding-left: 10px;" />
+					</a4j:commandLink>
+					
+					<a4j:commandLink styleClass="no-decor" execute="@this"
+						actionListener="#{mantenedorBean.tomarUpdateTipoDoc(d.tpo_id)}"
+						>
+						<h:graphicImage
+							value="resources/css/images/icons-png/edit-black.png"
+							style="padding-left: 10px;" />
+					</a4j:commandLink>
+					
+				</p:column>
+			</p:dataTable>
+	
+			<a4j:commandLink styleClass="no-decor" execute="@this"
+				actionListener="#{mantenedorBean.cambiarEstadonew()}"
+				render="panelNew"
+				value="Nuevo">
+	
+			</a4j:commandLink>
+	
+			<rich:panel rendered="#{mantenedorBean.estado}" id="panelNew" header="Nuevo Tipo Documento">
+					<h:panelGrid columns="2">
+						<p:outputLabel for="descriptorInsertDescNombreSmall"
+							value="Nombre Corto" />
+						<h:inputText id="descriptorInsertDescNombreSmall"
+							value="#{mantenedorBean.objTipoDocumentoDTO.tpo_nombre_small}" />
+	
+						<p:outputLabel for="descriptorInsertDescNombreLarge"
+							value="Nombre Largo" />
+						<h:inputText id="descriptorInsertDescNombreLarge"
+							value="#{mantenedorBean.objTipoDocumentoDTO.tpo_nombre_large}" />
+	
+						<p:outputLabel for="descriptorInsertDescEstado" value="Estado" />
+						<p:selectOneMenu id="descriptorInsertDescEstado"
+							value="#{mantenedorBean.objTipoDocumentoDTO.tpo_estado}">
+							<f:selectItem itemLabel="Activo" itemValue="1" />
+							<f:selectItem itemLabel="Inactivo" itemValue="0" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+					<div align="right">
+						<h:commandButton value="Cancelar"
+							execute="@this"
+							actionListener="#{mantenedorBean.cambiarEstado()}"
+							render="panelNew" />
+							
+						<h:commandButton value="Guardar"
+							actionListener="#{mantenedorBean.tomarFormularioTipoDoc()}"
+							execute="@this"
+							render="panelYose" />	
+					</div>
+	
+				</rich:panel>
+				
+				<rich:panel rendered="#{mantenedorBean.estadoDos}" id="panelEdit" header="Editar Tipo Documento">
+				
+				<h:panelGrid columns="2">
+						<p:outputLabel for="Small"
+							value="Nombre Corto" />
+						<h:inputText id="Small"
+							value="#{mantenedorBean.objTipoDocumentoDTO.tpo_nombre_small}" />
+	
+						<p:outputLabel for="Large"
+							value="Nombre Largo" />
+						<h:inputText id="Large"
+							value="#{mantenedorBean.objTipoDocumentoDTO.tpo_nombre_large}" />
+	
+						<p:outputLabel for="Estado" value="Estado" />
+						<p:selectOneMenu id="Estado"
+							value="#{mantenedorBean.objTipoDocumentoDTO.tpo_estado}">
+							<f:selectItem itemLabel="Activo" itemValue="1" />
+							<f:selectItem itemLabel="Inactivo" itemValue="0" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+					<div align="right">
+						<h:commandButton value="Cancelar"
+							execute="@this"
+							actionListener="#{mantenedorBean.cambiarEstadoDos()}"
+							render="panelEdit" />
+							
+						<h:commandButton value="Actualizar"
+							actionListener="#{mantenedorBean.updateTipoDoc()}"
+							execute="@this"
+							render="panelYose" />	
+					</div>
+				
+				</rich:panel>
+			
+
+	</fieldset>
+	
+</ui:composition>
+</html>

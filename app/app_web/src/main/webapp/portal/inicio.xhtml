@@ -1,0 +1,415 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition>
+
+	<p:growl id="growl" showDetail="true" sticky="true" />
+
+	<fieldset class="scheduler-border">
+		<legend class="scheduler-border">Búsqueda de Documentos</legend>
+		<table id="tblCarga">
+
+			<tr>
+
+			<td><p:outputLabel for="advanced" value="Año:" /></td>
+				<td>
+					<rich:select id="advanced" enableManualInput="true"
+						defaultLabel="Seleccione..."  style="  font-size: 22px;"
+						value="#{busquedaBean.anoTomado}" >
+						<f:selectItems value="#{busquedaBean.listYears}" var="y"
+							itemValue="#{y}" itemLabel="#{y}" />
+							</rich:select>
+					</td>
+
+
+				<td><p:outputLabel for="destinatario" value="Destinatario:" /></td>
+				<td>
+					<rich:select id="destinatario" enableManualInput="true"
+						defaultLabel="Seleccione..." style="  font-size: 22px;"
+						value="#{busquedaBean.strDestinatario}" >
+						<f:selectItems value="#{busquedaBean.listDestinatario}" var="y"
+							itemValue="#{y.des_id}" itemLabel="#{y.des_nombre_small}" />
+							</rich:select>
+					</td>
+			</tr>
+
+
+			<tr>
+
+				<td><p:outputLabel for="descriptor" value="Descriptor:" /></td>
+				<td>
+					<rich:select id="descriptor" enableManualInput="true"
+						defaultLabel="Seleccione..." style="  font-size: 22px;"
+						value="#{busquedaBean.strDescriptor}" >
+						<f:selectItems value="#{busquedaBean.listDescriptor}" var="y"
+							itemValue="#{y.desc_id}" itemLabel="#{y.desc_nombre_small}" />
+							</rich:select>
+					</td>
+
+				<td><p:outputLabel value="Materia:" for="materia" /></td>
+				<td><p:inputText id="materia"
+						value="#{busquedaBean.objBuscar.doc_materia}"
+						style="height: 25px;" /></td>
+
+			</tr>
+
+
+			<tr>
+
+				<td><p:outputLabel value="N° Documento:" for="numero" /></td>
+				<td><p:inputText id="numero"
+						value="#{busquedaBean.objBuscar.doc_numero}" style="height: 25px;" /></td>
+
+				<td><p:outputLabel for="tpoDocumento" value="Tipo Documento:" /></td>
+				<td>
+					<rich:select id="tpoDocumento" enableManualInput="true"
+						defaultLabel="Seleccione..." style="  font-size: 22px;"
+						value="#{busquedaBean.strTipoDocumento}" >
+						<f:selectItems value="#{busquedaBean.listTipoDocumento}" var="y"
+							itemValue="#{y.tpo_id}" itemLabel="#{y.tpo_nombre_small}" />
+							</rich:select></td>
+
+			</tr>
+
+			<tr>
+
+				<td><p:outputLabel value="Abogado:" for="abogado" /></td>
+				<td><p:inputText id="abogado"
+						value="#{busquedaBean.objBuscar.doc_abogado}"
+						style="height: 25px;" /></td>
+
+				<td><p:outputLabel value="Resumen:" for="resumen" /></td>
+				<td><p:inputTextarea rows="6" cols="33" id="resumen"
+						styleClass="validate[required] text-input"
+						value="#{busquedaBean.objBuscar.doc_resumen}" /></td>
+
+			</tr>
+
+			<tr>
+
+				<td><p:outputLabel for="desde" value="Desde:" /></td>
+				<td><p:calendar id="desde" value="#{busquedaBean.fechaDesde}"
+						pattern="yyyy-MM-dd" mask="true" /></td>
+
+				<td><p:outputLabel for="hasta" value="Hasta:" /></td>
+				<td><p:calendar id="hasta" value="#{busquedaBean.fechaHasta}"
+						pattern="yyyy-MM-dd" mask="true" /></td>
+
+
+			</tr>
+
+
+		</table>
+
+
+		<h:commandButton value="Buscar"
+			action="#{busquedaBean.tomarFormulario()}" execute="@form"
+			render="table2"></h:commandButton>
+
+			<h:commandButton value="Limpiar" action="#{busquedaBean.resetForm()}"
+			execute="@form" render="@form" style="margin-left: 5px;" />
+
+
+
+	</fieldset>
+	<rich:panel header="LISTA DE DOCUMENTOS">
+		<rich:dataTable value="#{busquedaBean.listDocumento}" var="doc"
+			iterationStatusVar="it" id="table2" rows="15"
+			styleClass="tablaDocumentos">
+			<rich:column style="text-align: center;">
+				<f:facet name="header">#</f:facet>
+		                #{doc.doc_id}
+		            </rich:column>
+			<rich:column style="text-align: center;">
+				<f:facet name="header">Año</f:facet>
+				<h:outputText value="#{doc.doc_ano}" />
+			</rich:column>
+			<rich:column style="text-align: center;">
+				<f:facet name="header">Destinatario</f:facet>
+				<h:outputText value="#{doc.nombreDestinatario}" />
+
+			</rich:column>
+			<rich:column style="text-align: center;">
+				<f:facet name="header">N° Documento</f:facet>
+				<h:outputText value="#{doc.doc_numero}" />
+			</rich:column>
+			<rich:column style="text-align: center;">
+				<f:facet name="header">Fecha Ingreso</f:facet>
+				<h:outputText value="#{doc.doc_fecha_ingreso}">
+					<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</rich:column>
+
+			<rich:column style="text-align: center;">
+				<f:facet name="header">Materia</f:facet>
+				<h:outputText value="#{doc.doc_materia}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">Resumen</f:facet>
+				<h:outputText value="#{doc.doc_resumen}" />
+			</rich:column>
+			<rich:column style="text-align: center;">
+				<f:facet name="header">Abogado</f:facet>
+				<h:outputText value="#{doc.doc_abogado}" />
+			</rich:column>
+			<rich:column style="text-align: center;">
+				<f:facet name="header">Descriptor</f:facet>
+				<h:outputText value="#{doc.nombreDescriptor}" />
+			</rich:column>
+
+			<rich:column style="text-align: center;">
+				<f:facet name="header">Estado</f:facet>
+				<h:outputText rendered="#{doc.doc_estado == 1}" value="Publicado" />
+				<h:outputText rendered="#{doc.doc_estado == 0}" value="Cerrado" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">Acciones</f:facet>
+				<a4j:commandLink styleClass="no-decor" render="editGrid" action="#{busquedaBean.tomarAno(doc.doc_ano)}"
+					execute="@this" oncomplete="#{rich:component('editPane')}.show()">
+					<h:graphicImage value="resources/image/edit-black.png" alt="edit"
+						styleClass="centerIcon" />
+					<f:setPropertyActionListener target="#{busquedaBean.objDocumento}"
+						value="#{doc}" />
+				</a4j:commandLink>
+
+				<a4j:commandLink styleClass="no-decor"
+					action="#{busquedaBean.onPreRender()}" execute="@this"
+					render="@none" oncomplete="#{rich:component('previewPane')}.show()">
+					<h:graphicImage value="resources/image/view.png" alt="download"
+						styleClass="centerIcon" style="  left: 10px;" />
+					<f:setPropertyActionListener target="#{busquedaBean.objDocumento}"
+						value="#{doc}" />
+				</a4j:commandLink>
+
+			</rich:column>
+			<rich:column rendered="#{busquedaBean.mostrar}">
+				<f:facet name="header">Deshabilitar</f:facet>
+				<a4j:commandLink styleClass="no-decor" execute="@this"
+					render="@none" oncomplete="#{rich:component('confirmPane')}.show()">
+					<h:graphicImage value="resources/image/action-black.png"
+						alt="delete" styleClass="centerIcon2" />
+					<f:setPropertyActionListener target="#{busquedaBean.objDocumento}"
+						value="#{doc}" />
+				</a4j:commandLink>
+			</rich:column>
+
+			<f:facet name="footer">
+				<rich:dataScroller page="#{busquedaBean.page}" fastStep="3" />
+			</f:facet>
+		</rich:dataTable>
+
+		<rich:popupPanel id="confirmPane" autosized="true"
+			domElementAttachment="parent" header="Deshabilitar Documento">
+	            Estás seguro de querer deshabilitar el documento?
+	            <a4j:commandButton value="Salir"
+				onclick="#{rich:component('confirmPane')}.hide(); return false;" />
+
+			<a4j:commandButton value="Deshabilitar"
+				actionListener="#{busquedaBean.removeDocumento}" render="table2"
+				execute="confirmPane"
+				oncomplete="if (#{facesContext.maximumSeverity==null}) {#{rich:component('confirmPane')}.hide();}" />
+		</rich:popupPanel>
+
+	
+		<rich:popupPanel header="Editar Metadata" id="editPane"
+			domElementAttachment="parent" autosized="true">
+			<table id="tblEdit">
+
+				<tr>
+
+					<td><p:outputLabel for="yearE" value="Año:" /></td>
+					<td><p:selectOneMenu id="yearE" value="#{busquedaBean.anoTomadoUp}">
+							  <f:selectItem itemLabel="Select One" itemValue="#{0}" itemDisabled="true"/>
+							<f:selectItems value="#{busquedaBean.listYears}" />
+						</p:selectOneMenu></td>
+ 
+					<td><p:outputLabel for="destinatarioE" value="Destinatario:" /></td>
+					<td>		
+					
+						<p:selectOneMenu id="destinatarioE"
+							value="#{busquedaBean.objDocumento.nombreDestinatario}">
+							  <f:selectItem itemLabel="Select One" itemValue="#{busquedaBean.objDocumento.nombreDestinatario}" itemDisabled="true"/>
+							<f:selectItems value="#{busquedaBean.listDestinatario}" var="Dest" itemLabel="#{Dest.des_nombre_small}" itemValue="#{Dest.des_nombre_small}" />
+						</p:selectOneMenu>
+						
+						</td>
+				</tr>
+
+
+				<tr>
+
+					<td><p:outputLabel for="descriptorE" value="Descriptor:" /></td>
+					<td>
+						<p:selectOneMenu id="descriptorE"
+							value="#{busquedaBean.objDocumento.nombreDescriptor}">
+							<f:selectItem itemLabel="Select One" itemValue="#{busquedaBean.objDocumento.nombreDescriptor}" itemDisabled="true"/>
+							<f:selectItems value="#{busquedaBean.listDescriptor}" var="desc" itemLabel="#{desc.desc_nombre_small}" itemValue="#{desc.desc_nombre_small}" />
+						</p:selectOneMenu>
+						</td>
+
+					<td><p:outputLabel value="Materia:" for="materiaE" /></td>
+					<td><p:inputText id="materiaE"
+							value="#{busquedaBean.objDocumento.doc_materia}"
+							style="height: 25px;" /></td>
+
+				</tr>
+
+
+				<tr>
+
+					<td><p:outputLabel value="N° Documento:" for="numeroE" /></td>
+					<td><p:inputText id="numeroE"
+							value="#{busquedaBean.objDocumento.doc_numero}"
+							style="height: 25px;" /></td>
+
+					<td><p:outputLabel for="tpoDocumentoE" value="Tipo Documento:" /></td>
+					<td>
+						
+						<p:selectOneMenu id="tpoDocumentoE"
+							value="#{busquedaBean.objDocumento.nombreTipoDoc}">
+						
+							<f:selectItems value="#{busquedaBean.listTipoDocumento}" var="tip" itemLabel="#{tip.tpo_nombre_small}" itemValue="#{tip.tpo_nombre_small}" />
+						</p:selectOneMenu>
+						</td>
+
+				</tr>
+
+				<tr>
+
+					<td><p:outputLabel value="Abogado:" for="abogadoE" /></td>
+					<td><p:inputText id="abogadoE"
+							value="#{busquedaBean.objDocumento.doc_abogado}"
+							style="height: 25px;" /></td>
+
+					<td><p:outputLabel value="Resumen:" for="resumenE" /></td>
+					<td><p:inputTextarea rows="6" cols="33" id="resumenE"
+							value="#{busquedaBean.objDocumento.doc_resumen}" /></td>
+
+				</tr>
+
+
+			</table>
+			<a4j:commandButton value="Publicar"
+				action="#{busquedaBean.actualizarDocumento}" render="table2"
+				execute="editPane"
+				oncomplete="if (#{facesContext.maximumSeverity==null}) {#{rich:component('editPane')}.hide();}" />
+			<a4j:commandButton value="Cancelar"
+				onclick="#{rich:component('editPane')}.hide(); return false;" />
+		</rich:popupPanel>
+
+	</rich:panel>
+
+
+	<rich:popupPanel id="previewPane" autosized="true"
+		domElementAttachment="form" header="Visualizar Documento">
+
+		<table>
+
+			<tr>
+
+				<td><pe:documentViewer height="500"
+						value="#{busquedaBean.content}" /></td>
+				<td>
+
+					<table id="tblMetadata">
+
+						<tr>
+
+							<td><p:outputLabel for="yearM" value="Año:" /></td>
+							<td><p:outputLabel id="yearM"
+									value="#{busquedaBean.objDocumento.doc_ano}"></p:outputLabel></td>
+
+
+						</tr>
+						<tr>
+
+							<td><p:outputLabel for="destinatarioM" value="Destinatario:" /></td>
+							<td><p:outputLabel id="destinatarioM"
+									value="#{busquedaBean.nombreDestinatario}"></p:outputLabel></td>
+						</tr>
+
+						<tr>
+
+							<td><p:outputLabel for="descriptorM" value="Descriptor:" /></td>
+							<td><p:outputLabel id="descriptorM"
+									value="#{busquedaBean.nombreDescriptor}"></p:outputLabel></td>
+
+
+
+						</tr>
+
+
+						<tr>
+
+							<td><p:outputLabel value="Materia:" for="materiaM" /></td>
+							<td><p:outputLabel id="materiaM"
+									value="#{busquedaBean.objDocumento.doc_materia}" /></td>
+						</tr>
+
+						<tr>
+
+							<td><p:outputLabel value="N° Documento:" for="numeroM" /></td>
+							<td><p:outputLabel id="numeroM"
+									value="#{busquedaBean.objDocumento.doc_numero}" /></td>
+
+
+
+						</tr>
+
+
+						<tr>
+
+							<td><p:outputLabel for="tpoDocumentoM"
+									value="Tipo Documento:" /></td>
+							<td><p:outputLabel id="tpoDocumentoM"
+									value="#{busquedaBean.nombreTpoDocumento}" /></td>
+
+						</tr>
+
+						<tr>
+
+							<td><p:outputLabel value="Abogado:" for="abogado" /></td>
+							<td><p:outputLabel id="abogadoM"
+									value="#{busquedaBean.objDocumento.doc_abogado}" /></td>
+
+
+
+						</tr>
+
+						<tr>
+
+							<td><p:outputLabel value="Resumen:" for="resumenM" /></td>
+							<td><p:inputTextarea rows="6" cols="33" id="resumenM"
+									value="#{busquedaBean.objDocumento.doc_resumen}"
+									disabled="true" /></td>
+						</tr>
+					</table>
+
+				</td>
+
+			</tr>
+
+		</table>
+
+		<a4j:commandButton value="Salir"
+			onclick="#{rich:component('previewPane')}.hide(); return false;" />
+
+	</rich:popupPanel>
+
+
+	<h:outputScript id="consultaRolJs">
+
+	$(document).on('click', '.ui-messages-error-icon',function(e) {
+	        $('.ui-messages').hide();
+	    }); 
+	
+
+</h:outputScript>
+
+</ui:composition>
+</html>
